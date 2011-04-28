@@ -185,7 +185,7 @@ sprite.fileReaderOpts = {
 
 sprite.gen = { 
 	rulebackground: function(url, width, height) {
-		var backgroundAttr = "background: url('"+url+"') no-repeat top left; ",
+		var backgroundAttr = "background: url('../images/"+url+"') repeat-x; ",
 			widthAttr = (width) ? 'width: ' + width + 'px; ' : '',
 			heightAttr = (height) ? 'height: ' + height + 'px; ' : '';
 		return ' { ' + backgroundAttr + widthAttr + heightAttr + ' } ';
@@ -193,11 +193,11 @@ sprite.gen = {
 	demoelement: function(classname) {
 		return "<div class='" + classname + "'></div>";
 	},
-	ruleindividual: function(selector, posX, posY, width, height) {
+	ruleindividual: function(mainSelector, selector, posX, posY, width, height) {
 		var posAttr = 'background-position: ' + posX + 'px ' + posY + 'px; ',
 			widthAttr = (width) ? 'width: ' + width + 'px; ' : '',
 			heightAttr = (height) ? 'height: ' + height + 'px; ' : '';
-		return selector + ' { ' + posAttr + widthAttr + heightAttr + ' } ';
+		return '.' + selector + ' { ' + mainSelector + '; ' + posAttr + widthAttr + heightAttr + ' } ';
 	}
 };
 
@@ -260,11 +260,10 @@ sprite.setrules = function() {
 		var matchedArr = filenameMatchReg(canvas.fileName),
 			matchedFilename = matchedArr ? matchedArr[matchedArr.length-1] : canvas.fileName,
 			canvasClassName = $.trim(classprefix + matchedFilename + classsuffix),
-			canvasSelector = $.trim(mainSelector + '.' + canvasClassName);
 			width = defineDimensionsGlobally ? false : canvas.width,
 			height = defineDimensionsGlobally ? false : canvas.height;
 			
-		cssRules.push(sprite.gen.ruleindividual(canvasSelector, canvas.storeX, canvas.storeY, width, height));
+		cssRules.push(sprite.gen.ruleindividual(mainSelector, canvasClassName, canvas.storeX, canvas.storeY, false, height));
 		htmlRules.push(sprite.gen.demoelement(spriteClassName + ' ' + canvasClassName));
 	});
 	
