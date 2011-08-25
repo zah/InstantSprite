@@ -185,19 +185,36 @@ sprite.fileReaderOpts = {
 
 sprite.gen = { 
 	rulebackground: function(url, width, height) {
-		var backgroundAttr = "background: url('../images/"+url+"') repeat-x; ",
-			widthAttr = (width) ? 'width: ' + width + 'px; ' : '',
-			heightAttr = (height) ? 'height: ' + height + 'px; ' : '';
-		return ' { ' + backgroundAttr + widthAttr + heightAttr + ' } ';
+    var opts = sprite.getopts();
+
+    if(opts.horizontal) {
+      var backgroundAttr = "background: url('../images/tiles-y.png') repeat-y; ";
+    } else {
+      var backgroundAttr = "background: url('../images/"+url+"') repeat-x; ";
+    }
+    
+    var widthAttr = (width) ? 'width: ' + width + 'px; ' : '',
+      heightAttr = (height) ? 'height: ' + height + 'px; ' : '';
+        
+    return ' { ' + backgroundAttr + widthAttr + heightAttr + ' } ';
 	},
 	demoelement: function(classname) {
 		return "<div class='" + classname + "'></div>";
 	},
 	ruleindividual: function(mainSelector, selector, posX, posY, width, height) {
-		var posAttr = 'background-position: ' + posX + 'px ' + posY + 'px; ',
-			widthAttr = (width) ? 'width: ' + width + 'px; ' : '',
-			heightAttr = (height) ? 'height: ' + height + 'px; ' : '';
-		return '.' + selector + ' { ' + mainSelector + '; ' + posAttr + widthAttr + heightAttr + ' } ';
+    var opts = sprite.getopts();
+    
+    var posAttr = 'background-position: ' + posX + 'px ' + posY + 'px; ';
+      
+      if(opts.horizontal) {
+        var widthAttr = (width) ? 'width: ' + width + 'px; ' : '';
+        var heightAttr = '';
+      } else {
+        widthAttr = '';
+        var heightAttr = (height) ? 'height: ' + height + 'px; ' : '';
+      }
+      
+    return '.' + selector + ' { ' + mainSelector + '; ' + posAttr + widthAttr + heightAttr + ' } ';
 	}
 };
 
@@ -236,6 +253,14 @@ sprite.dimensionfrequency = function() {
 };
 
 sprite.setrules = function() {
+  
+  var opts = sprite.getopts();
+  if(opts.horizontal) {
+    elements.spriteClassName.val('tiles-y');
+  } else {
+    elements.spriteClassName.val('tiles-x');
+  }
+  
 	var cssRules = [],
 		htmlRules = [],
 		cssprefix = $.trim(elements.cssPrefix.val()) + ' ',
@@ -263,7 +288,7 @@ sprite.setrules = function() {
 			width = defineDimensionsGlobally ? false : canvas.width,
 			height = defineDimensionsGlobally ? false : canvas.height;
 			
-		cssRules.push(sprite.gen.ruleindividual(mainSelector, canvasClassName, canvas.storeX, canvas.storeY, false, height));
+		cssRules.push(sprite.gen.ruleindividual(mainSelector, canvasClassName, canvas.storeX, canvas.storeY, width, height));
 		htmlRules.push(sprite.gen.demoelement(spriteClassName + ' ' + canvasClassName));
 	});
 	
