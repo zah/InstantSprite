@@ -291,6 +291,8 @@ sprite.setrules = function() {
 		cssRules.push(sprite.gen.ruleindividual(mainSelector, canvasClassName, canvas.storeX, canvas.storeY, width, height));
 		htmlRules.push(sprite.gen.demoelement(spriteClassName + ' ' + canvasClassName));
 	});
+
+  cssRules.push("// " + (cssRules.length).toString() + " rules total")
 	
 	
 	var outputWidth = defineDimensionsGlobally ? dimensionFrequency.mostFrequentWidth : false,
